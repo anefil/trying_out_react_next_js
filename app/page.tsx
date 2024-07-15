@@ -1,95 +1,44 @@
+"use client";
+
 import Image from "next/image";
 import styles from "./page.module.css";
+import Sidebar from "@/components/Sidebar";
+import Main from "@/components/Main";
+import {dataCell, openDB, setDBData} from "@/logic/todoData"
+import { useEffect, useState } from "react";
+
 
 export default function Home() {
+  let [data,setData] = useState(null as dataCell[]|null);
+  useEffect(() => {
+    openDB().then((v => {
+      setData(v);
+    }));
+  });
+  function toggleIdx(idx: number, state: boolean) {
+    if(data===null) {
+      throw new Error("DB is not initialized.");
+    }
+    let realId = data.findIndex((v) => v.timeID===idx);
+    let {completed,text,timeID} = data[realId];
+    let result = [...data];
+    result[realId] = {
+      completed: state,
+      text,
+      timeID
+    };
+    setData(result);
+    setDBData({
+      completed: state,
+      text,
+      timeID
+    });
+  }
+  // todo: use effect or some other ways of not using async...
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    <>
+      <Sidebar/>
+      <Main currentTODOlist={data} setCompletionState={toggleIdx}/>
+    </>
   );
 }
