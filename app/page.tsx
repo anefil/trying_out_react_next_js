@@ -34,11 +34,31 @@ export default function Home() {
       timeID
     });
   }
+  function addNewElement(text: string) {
+    let oldSetData = setData;
+    function callback() {
+      let result = [...(data as dataCell[])];
+      let obj: dataCell = {
+        completed: false,
+        text,
+        timeID: + new Date()
+      };
+      result.push(obj);
+      oldSetData(result);
+      setDBData(obj);
+    };
+    
+    if (data===null) {
+      throw new Error("DB data is not retieved yet.");
+    } else {
+      callback();
+    }
+  }
   // todo: use effect or some other ways of not using async...
   return (
     <>
       <Sidebar/>
-      <Main currentTODOlist={data} setCompletionState={toggleIdx}/>
+      <Main currentTODOlist={data} setCompletionState={toggleIdx} addNewElement={addNewElement}/>
     </>
   );
 }

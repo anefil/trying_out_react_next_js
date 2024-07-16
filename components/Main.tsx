@@ -4,7 +4,14 @@ import TodoList from "./TodoList";
 
 
 
-export default function Main({currentTODOlist,setCompletionState}: {currentTODOlist: dataCell[]|null, setCompletionState: (idx: number, state: boolean) => void}) {
+export default function Main(
+    {currentTODOlist,setCompletionState,addNewElement}: 
+    {
+        currentTODOlist: dataCell[]|null, 
+        setCompletionState: (idx: number, state: boolean) => void,
+        addNewElement: (text: string) => void
+    }
+) {
     if(currentTODOlist==null) {
         return <MainSkeleton/> // can't use loading.tsx because its client site await
     };
@@ -12,7 +19,7 @@ export default function Main({currentTODOlist,setCompletionState}: {currentTODOl
     return (
         <main>
             <p>TODO app:</p>
-            <TodoList currentTODOlist={currentTODOlist} setCompletionState={setCompletionState}/>
+            <TodoList currentTODOlist={currentTODOlist} setCompletionState={setCompletionState} addNewElement={addNewElement}/>
         </main>
     );
 }
