@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Sidebar from "@/components/Sidebar";
+import { ChakraClientProvider } from '@/providers/chakra-client-provider'
+import { Flex } from "@chakra-ui/react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -14,8 +17,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" style={{height: "100%"}}>
+      <body className={inter.className} style={{height: "100%"}}>
+        <ChakraClientProvider>
+          <Flex direction="row" h="100%">
+            <Sidebar/>
+            {children}
+          </Flex>
+        </ChakraClientProvider>
+      </body>
     </html>
   );
 }

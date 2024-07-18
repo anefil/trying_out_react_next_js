@@ -1,11 +1,10 @@
-"use client";
+'use client';
 
 import Image from "next/image";
-import styles from "./page.module.css";
-import Sidebar from "@/components/Sidebar";
-import Main from "@/components/Main";
 import {dataCell, openDB, setDBData} from "@/logic/todoData"
 import { useEffect, useState } from "react";
+import TodoList from "@/components/TodoList";
+import { Box, Container, Text } from "@chakra-ui/react";
 
 
 export default function Home() {
@@ -57,8 +56,44 @@ export default function Home() {
   // todo: use effect or some other ways of not using async...
   return (
     <>
-      <Sidebar/>
       <Main currentTODOlist={data} setCompletionState={toggleIdx} addNewElement={addNewElement}/>
     </>
   );
+}
+
+
+
+function Main(
+    {currentTODOlist,setCompletionState,addNewElement}: 
+    {
+        currentTODOlist: dataCell[]|null, 
+        setCompletionState: (idx: number, state: boolean) => void,
+        addNewElement: (text: string) => void
+    }
+) {
+    if(currentTODOlist==null) {
+        return <MainSkeleton/> // can't use loading.tsx because its client site await
+    };
+
+    return (
+        <Container my="10" maxW="80%">
+            <Text fontSize="xl" fontWeight="black" mb="6">
+              TODO app:
+            </Text>
+            <TodoList currentTODOlist={currentTODOlist} setCompletionState={setCompletionState} addNewElement={addNewElement}/>
+        </Container>
+    );
+}
+
+export function MainSkeleton() {
+    return (
+        <Container my="10" maxW="80%">
+            <Text fontSize="xl" fontWeight="black" mb="6">
+              TODO app:
+            </Text>
+            <Text fontSize="lg" fontWeight="medium" mb="6">
+              Loading...
+            </Text>
+        </Container>
+    )
 }
