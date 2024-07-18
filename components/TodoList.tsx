@@ -30,7 +30,7 @@ export default function TodoList(
                             </Text>
                         </GridItem>
                         <GridItem key={v.timeID+"icon"}>
-                            <IconButton size="sm" icon={<EditIcon/>} variant="ghost"></IconButton>
+                            <IconButton size="sm" icon={<EditIcon/>} variant="ghost" aria-label={"Edit item"}></IconButton>
                         </GridItem>
                         </>
                     );
