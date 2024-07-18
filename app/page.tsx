@@ -85,7 +85,7 @@ function Main(
     );
 }
 
-export function MainSkeleton() {
+function MainSkeleton() {
     return (
         <Container my="10" maxW="80%">
             <Text fontSize="xl" fontWeight="black" mb="6">
